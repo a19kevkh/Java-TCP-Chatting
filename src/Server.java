@@ -8,7 +8,6 @@ public class Server extends Thread {
     String replyMessage;
 
     public Server(int serverPort) {
-
         // Identify server program by serverPort
         this.portNumber = serverPort;
     }
@@ -31,9 +30,6 @@ public class Server extends Thread {
         }
 
         // Create a communication channel
-      /*  long startTimeSequential  = System.currentTimeMillis();
-        System.out.println("StartTimeSequential: " + startTimeSequential );
-        EndPoint serverEnd = new EndPoint(); //sequential way*/
 
         do {
 
@@ -44,8 +40,6 @@ public class Server extends Thread {
                 e.printStackTrace();
             }
 
-            long startTimeParallel = System.currentTimeMillis();
-            System.out.println("StartTimeParallel: " + startTimeParallel);
             HandleClient handleClient = new HandleClient(socket, replyMessage);
             handleClient.start();
 /*

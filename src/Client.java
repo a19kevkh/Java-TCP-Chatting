@@ -46,9 +46,6 @@ public class Client extends Thread {
         String replyMessage = clientEnd.readStream(socket);
 
         System.out.println("Client- received: " + replyMessage + " " + ClientName );
-        long EndTime  = System.currentTimeMillis();
-        System.out.println("EndTime : " + EndTime  + " " + ClientName);
-
 
     }
 }
