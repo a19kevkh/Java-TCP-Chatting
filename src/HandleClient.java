@@ -6,9 +6,8 @@ class HandleClient extends Thread {
     String ReplyMessage = null;
 
 
-    public HandleClient(Socket serverSocket, String ReplyMessage) {
+    public HandleClient(Socket serverSocket) {
         this.serverSocket = serverSocket;
-        this.ReplyMessage = ReplyMessage;
     }
 
     public void run() {
@@ -17,6 +16,6 @@ class HandleClient extends Thread {
         System.out.println("Server- received: " + receivedMessage);
 
         // Now send back a reply message via the pre-established channel
-        endPoint.writeStream(serverSocket, ReplyMessage);
+        endPoint.writeStream(serverSocket, "");
     }
 }

@@ -40,7 +40,7 @@ public class Server extends Thread {
                 e.printStackTrace();
             }
 
-            HandleClient handleClient = new HandleClient(socket, replyMessage);
+            HandleClient handleClient = new HandleClient(socket);
             handleClient.start();
 /*
             // Receive incoming messages
