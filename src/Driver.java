@@ -3,7 +3,6 @@ public class Driver {
         int serverPort = 1234;
         Server serverInstance = new Server(serverPort); //1
         String replyMessage = "Nice to meet you";
-        serverInstance.setReplyMessage(replyMessage); //2
         serverInstance.start(); //3
         Client clientInstance = new Client("Arvid"); //4
         String serverString = "localhost";

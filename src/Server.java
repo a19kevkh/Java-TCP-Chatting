@@ -5,16 +5,10 @@ import java.net.Socket;
 public class Server extends Thread {
 
     int portNumber;
-    String replyMessage;
 
     public Server(int serverPort) {
         // Identify server program by serverPort
         this.portNumber = serverPort;
-    }
-
-    public void setReplyMessage(String replyMessage) {
-
-        this.replyMessage = replyMessage;
     }
 
     public void run() {

@@ -47,10 +47,11 @@ public class Client extends Thread implements ActionListener {
         //clientEnd.writeStream(socket, requestMessage);
 
         // Receive a reply message from server
-        String replyMessage = clientEnd.readStream(socket);
-        chatGUI.displayMessage(replyMessage);
-        //System.out.println("Client- received: " + replyMessage + " " + ClientName );
-
+        while(true){
+            String replyMessage = clientEnd.readStream(socket);
+            chatGUI.displayMessage(replyMessage);
+            //System.out.println("Client- received: " + replyMessage + " " + ClientName );
+        }
     }
 
 
