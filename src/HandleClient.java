@@ -19,7 +19,7 @@ class HandleClient extends Thread {
         Set<String> keys = myServer.connectedMembers.keySet();
         //String[] array = new String[10];
         for (String key: keys) {
-            if(key.equals("Arvid")){
+            if(key.equals(part4)){
                 return key;
             }
         }
@@ -58,7 +58,7 @@ class HandleClient extends Thread {
             }
             String sender = getSender(receivedMessage);
             if(receivedMessage.contains("/tell")){
-                String user = getReceiver(getSender(receivedMessage),receivedMessage,0);
+                String user = getReceiver(getSender(receivedMessage),receivedMessage,5);
                 System.out.println("Found receiver: "+user);
             }
             //System.out.println("Size: " +receivedMessage.length()+"Server- received: " + receivedMessage);

@@ -64,7 +64,7 @@ public class Client extends Thread implements ActionListener {
         String message = chatGUI.getInput();
 
         // add sender name to message
-        message = name + "- " + message;
+        message = name + "-" + message;
         clientEnd.writeStream(socket,message);
         // create packet to carry the message, assuming any message fits
         // a packet size
