@@ -11,8 +11,6 @@ public class Client extends Thread implements ActionListener {
     EndPoint clientEnd = new EndPoint();
 
     Socket socket;
-    String requestMessage;
-    String ClientName;
     String name;
     
     public Client(String name) {
