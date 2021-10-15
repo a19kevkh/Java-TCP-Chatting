@@ -3,21 +3,20 @@ public class Driver {
         int serverPort = 1234;
         Server serverInstance = new Server(serverPort); //1
         String replyMessage = "Nice to meet you";
-        serverInstance.setReplyMessage(replyMessage); //2
         serverInstance.start(); //3
-        Client clientInstance = new Client(); //4
+        Client clientInstance = new Client("Arvid"); //4
         String serverString = "localhost";
         clientInstance.setServerParameters(serverString, serverPort); //5
-        String requestMessage = "Hallå! Klient förfrågan";
-        clientInstance.setRequestMessage(requestMessage,"C1"); //6
         clientInstance.start(); //7
 
 
-        Client clientInstance2 = new Client();
+        Client clientInstance2 = new Client("Kevin");
         clientInstance2.setServerParameters(serverString, serverPort);
-        String requestMessage2 = "Hallå! Klient2 förfrågan";
-        clientInstance2.setRequestMessage(requestMessage2,"C2"); //6
         clientInstance2.start(); //7
+
+        Client clientInstance3 = new Client("Erik");
+        clientInstance3.setServerParameters(serverString, serverPort);
+        clientInstance3.start(); //7
         // initialize server port.
         // Note there is no client port as the server uses the pre-established
         // channel by the client to reach the client. The server is the listener

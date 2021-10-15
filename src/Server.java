@@ -1,20 +1,27 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Hashtable;
 
 public class Server extends Thread {
 
     int portNumber;
-    String replyMessage;
+    Hashtable<String, Socket> connectedMembers = new Hashtable<>();
 
     public Server(int serverPort) {
         // Identify server program by serverPort
         this.portNumber = serverPort;
     }
 
-    public void setReplyMessage(String replyMessage) {
-
-        this.replyMessage = replyMessage;
+    public boolean AddToHash(String name, Socket clientSocket){
+        if(connectedMembers.contains(name)){
+            return true;
+        }
+        else{
+            connectedMembers.put(name, clientSocket);
+            System.out.println(connectedMembers);
+            return false;
+        }
     }
 
     public void run() {
@@ -40,7 +47,7 @@ public class Server extends Thread {
                 e.printStackTrace();
             }
 
-            HandleClient handleClient = new HandleClient(socket, replyMessage);
+            HandleClient handleClient = new HandleClient(socket, this);
             handleClient.start();
 /*
             // Receive incoming messages
