@@ -13,6 +13,10 @@ public class Driver {
         Client clientInstance2 = new Client("Kevin");
         clientInstance2.setServerParameters(serverString, serverPort);
         clientInstance2.start(); //7
+
+        Client clientInstance3 = new Client("Erik");
+        clientInstance3.setServerParameters(serverString, serverPort);
+        clientInstance3.start(); //7
         // initialize server port.
         // Note there is no client port as the server uses the pre-established
         // channel by the client to reach the client. The server is the listener
