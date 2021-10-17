@@ -2,7 +2,6 @@ public class Driver {
     public static void main(String[] args) {
         int serverPort = 1234;
         Server serverInstance = new Server(serverPort); //1
-        String replyMessage = "Nice to meet you";
         serverInstance.start(); //3
         Client clientInstance = new Client("Arvid"); //4
         String serverString = "localhost";
@@ -17,6 +16,10 @@ public class Driver {
         Client clientInstance3 = new Client("Erik");
         clientInstance3.setServerParameters(serverString, serverPort);
         clientInstance3.start(); //7
+
+        Client clientInstance4 = new Client("Tedd");
+        clientInstance4.setServerParameters(serverString, serverPort);
+        clientInstance4.start(); //7
         // initialize server port.
         // Note there is no client port as the server uses the pre-established
         // channel by the client to reach the client. The server is the listener
