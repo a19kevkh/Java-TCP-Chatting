@@ -1,10 +1,23 @@
 import java.net.Socket;
+import java.util.Collection;
 import java.util.Set;
 
 class HandleClient extends Thread {
 
     Socket socket = null;
     Server myServer = null;
+    EndPoint endPoint = null;
+
+
+    public boolean AddToHash(String name, Socket clientSocket){
+        if(myServer.connectedMembers.contains(name)){
+            return true;
+        }
+        else{
+            myServer.connectedMembers.put(name, clientSocket);
+            return false;
+        }
+    }
 
     public String getMessageOnly(String name, String trimmedMsg, int commandLength){
         // "name-/tell user msg"
@@ -34,13 +47,11 @@ class HandleClient extends Thread {
         String part4 = part3.substring(0, index);
 
         Set<String> keys = myServer.connectedMembers.keySet();
-        //String[] array = new String[10];
         for (String key: keys) {
             if(key.equals(part4)){
                 return key;
             }
         }
-        //myServer.connectedMembers.forEach((k, v) -> System.out.println(k));
         return null;
     }
 
@@ -56,7 +67,6 @@ class HandleClient extends Thread {
 
     public Socket getSocket(String receiver){
         Set<String> keys = myServer.connectedMembers.keySet();
-        //String[] array = new String[10];
         for (String key: keys) {
             if(key.equals(receiver)){
                 return myServer.connectedMembers.get(key);
@@ -65,49 +75,107 @@ class HandleClient extends Thread {
         return null;
     }
 
+    public void broadcast(String message, String sender){
+        Set<String> keys = myServer.connectedMembers.keySet();
+        for (String key: keys) {
+            endPoint.writeStream(myServer.connectedMembers.get(key), sender + "- " + message);
+        }
+    }
+
+    public boolean isConnected(String username){
+        Set<String> keys = myServer.connectedMembers.keySet();
+        for (String key: keys) {
+            if(key.equals(username)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public HandleClient(Socket tempSocket, Server server) {
         this.socket = tempSocket;
         this.myServer = server;
+        endPoint = new EndPoint();
     }
 
     public void run() {
         while (true) {
-            EndPoint endPoint = new EndPoint();
             String receivedMessage = endPoint.readStream(socket);
             if (receivedMessage.contains("/handshake")) {
-                // Get client name (it is a new chat-room member!)
-                boolean taken = myServer.AddToHash(getSender(receivedMessage), socket);
-                if (taken) {
-                    endPoint.writeStream(socket, "Server- Username taken");
-                } else {
-                    endPoint.writeStream(socket, "NOT TAKEN!");
-                    Socket tempSocket = getSocket(getSender(receivedMessage));
-                    endPoint.writeStream(tempSocket, "IF U SEE THIS THEN GOOD");
+                if(isConnected(getSender(receivedMessage))){
+                    endPoint.writeStream(socket, "Server- Already connected");
                 }
+                else{
+                    boolean taken = AddToHash(getSender(receivedMessage), socket);
+                    if (taken) {
+                        endPoint.writeStream(socket, "Server- Username taken");
+                    } else {
+                        broadcast(getSender(receivedMessage) + " joined the chat!", "Server");
+                    }
+                }
+                // Get client name (it is a new chat-room member!)
+
                 continue;
             }
             String sender = getSender(receivedMessage);
 
             if(receivedMessage.contains("/tell")){
-                String user = getReceiver(getSender(receivedMessage),receivedMessage,5);
-                if(user != null){
-                    String msg = getMessageOnly(sender, receivedMessage.trim(),5);
-                    Socket receivingSocket = getSocket(user);
-                    endPoint.writeStream(receivingSocket, sender + "- " +msg);
-                    endPoint.writeStream(socket, sender + "- " +msg);
+                if(isConnected(sender)){
+                    String user = getReceiver(getSender(receivedMessage),receivedMessage,5);
+                    if(user != null){
+                        String msg = getMessageOnly(sender, receivedMessage.trim(),5);
+                        Socket receivingSocket = getSocket(user);
+                        endPoint.writeStream(receivingSocket, sender + "- " +msg);
+                        endPoint.writeStream(socket, sender + "- " +msg);
+                    }
+                    else{
+                        endPoint.writeStream(socket, "Server- cannot find user");
+                    }
                 }
                 else{
-                    endPoint.writeStream(socket, "Server- cannot find user");
+                    endPoint.writeStream(socket, "Server- Handshake required");
+                }
+                continue;
+            }
+
+            if(receivedMessage.contains("/list")){
+                if(isConnected(sender)){
+                    Set<String> keys = myServer.connectedMembers.keySet();
+                    for (String key: keys) {
+                        endPoint.writeStream(socket, "Server- " + key);
+                    }
+                }
+                else{
+                    endPoint.writeStream(socket, "Server- Handshake required");
+                }
+                continue;
+            }
+
+            if(receivedMessage.contains("/leave"))
+            {
+                if(isConnected(sender)){
+                    Set<String> keys = myServer.connectedMembers.keySet();
+                    for (String key: keys) {
+                        if(key.equals(sender)){
+                            broadcast(sender + " left the Chat!", "Server");
+                            myServer.connectedMembers.remove(key);
+                            break;
+                        }
+                    }
+                }
+                else{
+                    endPoint.writeStream(socket, "Server- Handshake required");
                 }
                 continue;
             }
             //System.out.println("Size: " +receivedMessage.length()+"Server- received: " + receivedMessage);
             // Now send back a reply message via the pre-established channel
             else{
-                Set<String> keys = myServer.connectedMembers.keySet();
-                //String[] array = new String[10];
-                for (String key: keys) {
-                    endPoint.writeStream(myServer.connectedMembers.get(key), sender + "- " + getMessageOnly(sender,receivedMessage.trim(),0));
+                if(isConnected(sender)){
+                    broadcast(getMessageOnly(sender,receivedMessage.trim(),0),sender);
+                }
+                else{
+                    endPoint.writeStream(socket, "Server- Handshake required");
                 }
             }
 

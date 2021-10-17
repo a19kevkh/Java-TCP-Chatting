@@ -13,17 +13,6 @@ public class Server extends Thread {
         this.portNumber = serverPort;
     }
 
-    public boolean AddToHash(String name, Socket clientSocket){
-        if(connectedMembers.contains(name)){
-            return true;
-        }
-        else{
-            connectedMembers.put(name, clientSocket);
-            System.out.println(connectedMembers);
-            return false;
-        }
-    }
-
     public void run() {
 
         ServerSocket serverSocket = null;
