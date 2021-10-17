@@ -105,7 +105,7 @@ class HandleClient extends Thread {
                     endPoint.writeStream(socket, "Server- Already connected");
                 }
                 else{
-                    boolean taken = myServer.AddToHash(getSender(receivedMessage), socket);
+                    boolean taken = AddToHash(getSender(receivedMessage), socket);
                     if (taken) {
                         endPoint.writeStream(socket, "Server- Username taken");
                     } else {
