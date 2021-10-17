@@ -35,14 +35,13 @@ class HandleClient extends Thread {
         int index = part3.indexOf("-");
         String part4 = part3.substring(0, index);
 
-        Set<String> keys = myServer.connectedMembers.keySet();
-        //String[] array = new String[10];
+        //Set<String> keys = myServer.connectedMembers.keySet();
+        Set<String> keys = readCS();
         for (String key: keys) {
             if(key.equals(part4)){
                 return key;
             }
         }
-        //myServer.connectedMembers.forEach((k, v) -> System.out.println(k));
         return null;
     }
 
@@ -57,7 +56,8 @@ class HandleClient extends Thread {
     }
 
     public Socket getSocket(String receiver){
-        Set<String> keys = myServer.connectedMembers.keySet();
+        //Set<String> keys = myServer.connectedMembers.keySet();
+        Set<String> keys = readCS();
         for (String key: keys) {
             if(key.equals(receiver)){
                 return myServer.connectedMembers.get(key);
@@ -67,20 +67,26 @@ class HandleClient extends Thread {
     }
 
     public void broadcast(String message, String sender){
-        Set<String> keys = myServer.connectedMembers.keySet();
+        //Set<String> keys = myServer.connectedMembers.keySet();
+        Set<String> keys = readCS();
         for (String key: keys) {
             endPoint.writeStream(myServer.connectedMembers.get(key), sender + "- " + message);
         }
     }
 
     public boolean isConnected(String username){
-        Set<String> keys = myServer.connectedMembers.keySet();
+        //Set<String> keys = myServer.connectedMembers.keySet();
+        Set<String> keys = readCS();
         for (String key: keys) {
             if(key.equals(username)){
                 return true;
             }
         }
         return false;
+    }
+
+    public synchronized Set<String> readCS(){
+        return myServer.connectedMembers.keySet();
     }
 
     public HandleClient(Socket tempSocket, Server server) {
@@ -132,8 +138,8 @@ class HandleClient extends Thread {
             if(receivedMessage.contains("/leave"))
             {
                 if(isConnected(sender)){
-                    Set<String> keys = myServer.connectedMembers.keySet();
-                    //String[] array = new String[10];
+                    //Set<String> keys = myServer.connectedMembers.keySet();
+                    Set<String> keys = readCS();
                     for (String key: keys) {
                         if(key.equals(sender)){
                             broadcast(sender + " left the Chat!", "Server");
