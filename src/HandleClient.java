@@ -138,6 +138,19 @@ class HandleClient extends Thread {
                 continue;
             }
 
+            if(receivedMessage.contains("/list")){
+                if(isConnected(sender)){
+                    Set<String> keys = myServer.connectedMembers.keySet();
+                    for (String key: keys) {
+                        endPoint.writeStream(socket, "Server- " + key);
+                    }
+                }
+                else{
+                    endPoint.writeStream(socket, "Server- Handshake required");
+                }
+                continue;
+            }
+
             if(receivedMessage.contains("/leave"))
             {
                 if(isConnected(sender)){
