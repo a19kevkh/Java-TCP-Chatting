@@ -1,4 +1,5 @@
 import java.net.Socket;
+import java.util.Collection;
 import java.util.Set;
 
 class HandleClient extends Thread {
@@ -145,6 +146,7 @@ class HandleClient extends Thread {
                         if(key.equals(sender)){
                             broadcast(sender + " left the Chat!", "Server");
                             myServer.connectedMembers.remove(key);
+                            break;
                         }
                     }
                 }
