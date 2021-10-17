@@ -80,6 +80,9 @@ class HandleClient extends Thread {
         for (String key: keys) {
             endPoint.writeStream(myServer.connectedMembers.get(key), sender + "- " + message);
         }
+        if(myServer.connectedMembers.size() >= 4){
+            endPoint.writeStream(socket, "FINISHED!");
+        }
     }
 
     public boolean isConnected(String username){

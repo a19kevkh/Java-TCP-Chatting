@@ -48,6 +48,7 @@ public class Client extends Thread implements ActionListener {
         while(true){
             String replyMessage = clientEnd.readStream(socket);
             chatGUI.displayMessage(replyMessage);
+            System.err.println( replyMessage+ " " + name+" stop: "+System.nanoTime());
             //System.out.println("Client- received: " + replyMessage + " " + ClientName );
         }
     }
@@ -66,6 +67,7 @@ public class Client extends Thread implements ActionListener {
         // add sender name to message
         message = name + "-" + message;
         clientEnd.writeStream(socket,message);
+        System.err.println(name+" start: "+System.nanoTime());
         // create packet to carry the message, assuming any message fits
         // a packet size
         //messagePacket = clientEnd.makeNewPacket(message, serverAddress, serverPortNumber);
