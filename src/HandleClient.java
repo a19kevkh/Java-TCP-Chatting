@@ -125,7 +125,7 @@ class HandleClient extends Thread {
             if(receivedMessage.contains("/tell")){
                 if(isConnected(sender)){
                     String user = getReceiver(getSender(receivedMessage),receivedMessage,5);
-                    if(user != null){
+                    if(user != null && !user.equals(sender)){
                         String msg = getMessageOnly(sender, receivedMessage.trim(),5);
                         Socket receivingSocket = getSocket(user);
                         endPoint.writeStream(receivingSocket, sender + "- " +msg);

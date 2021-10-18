@@ -41,15 +41,10 @@ public class Client extends Thread implements ActionListener {
     public void run() {
         chatGUI = new ChatGUI(this,name);
 
-        // Send a message to server
-        //clientEnd.writeStream(socket, requestMessage);
-
         // Receive a reply message from server
         while(true){
             String replyMessage = clientEnd.readStream(socket);
             chatGUI.displayMessage(replyMessage);
-            System.err.println( replyMessage+ " " + name+" stop: "+System.nanoTime());
-            //System.out.println("Client- received: " + replyMessage + " " + ClientName );
         }
     }
 
@@ -67,18 +62,10 @@ public class Client extends Thread implements ActionListener {
         // add sender name to message
         message = name + "-" + message;
         clientEnd.writeStream(socket,message);
-        System.err.println(name+" start: "+System.nanoTime());
-        // create packet to carry the message, assuming any message fits
-        // a packet size
-        //messagePacket = clientEnd.makeNewPacket(message, serverAddress, serverPortNumber);
 
-        // send the message
-        //clientEnd.sendPacket(messagePacket);
-        //System.err.println("start: "+System.nanoTime());
 
-        // clear the GUI input field, using a utility function of ChatGUI
         chatGUI.clearInput();
-        //chatGUI.displayMessage(message);    //Ta bort sen
+
     }
 }
 
